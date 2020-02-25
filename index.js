@@ -13,7 +13,9 @@ const connect = mysql.createConnection(({
 
 }))
 
-connect.connect(() => console.log('Connectado Mysql'))
+const dependencies = {
+    connect
+}
 
 app.use(express.static('public'))
 app.set('views', path.join(__dirname, 'views'))
@@ -21,4 +23,9 @@ app.set('view engine', 'ejs')
 
 app.get('/', (req,res) => res.render('home'))
 
-app.listen(port,()  => console.log('Start') )
+const pessoas = require('./router/pessoas')
+app.use('/pessoas', pessoas(dependencies))
+
+connect.connect(() => {
+    app.listen(port,()  => console.log('Start') )
+})
